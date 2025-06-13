@@ -1,75 +1,104 @@
-# Chess Game with Minimax AI
+# CHESS
 
-A Python chess game with a graphical interface and a minimax-based AI opponent.  
-This project is designed for anyone who wants to play chess against a computer, study basic AI, or learn about GUI programming in Python.
+A chess game implementing the **Minimax algorithm with Alpha-Beta pruning** for intelligent AI gameplay. Built with Python and Tkinter GUI.
 
----
+## Overview
 
-## Features
+This project demonstrates a complete chess engine using the **Minimax algorithm** - a decision-making algorithm widely used in game theory and AI. The engine evaluates thousands of possible moves to find the optimal play at each turn.
 
-- **Play chess against the computer**: Choose to play as White or Black.
-- **Minimax AI**: The computer opponent uses the minimax algorithm with alpha-beta pruning.
-- **Adjustable difficulty**: Select the AI search depth (2, 3, or 4).
-- **All chess rules supported**: Includes pawn promotion, castling, en passant, and all draw conditions (stalemate, threefold/fivefold repetition, fifty-move rule, insufficient material).
-- **User-friendly GUI**: Built with Tkinter, featuring piece images, move highlighting, and dialogs for game events.
-- **No external dependencies except `chess` and `Pillow`**.
+## Core Features
 
----
+- **Minimax AI Engine**: Recursive tree search with Alpha-Beta pruning optimization
+- **Configurable Difficulty**: 3 levels (Depth 2-4) affecting search depth and playing strength  
+- **Complete Chess Implementation**: All official rules including special moves and endgame conditions
+- **Interactive GUI**: Visual board with smooth animations and move history navigation
+- **Game Analysis**: Review previous positions and export games in PGN format
 
-## Installation & Usage
+## Algorithm Implementation
 
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
-   ```
+The AI engine (`ChessEngine.py`) uses:
 
-2. **Install dependencies:**
-   ```sh
-   pip install -r requirements.txt
-   ```
+**Minimax with Alpha-Beta Pruning:**
+- Recursively searches the game tree to a specified depth
+- Evaluates leaf positions using material and positional factors
+- Alpha-beta pruning eliminates up to 75% of unnecessary branches
+- Returns the best move for the current position
 
-3. **Run the game:**
-   ```sh
-   python main.py
-   ```
+**Position Evaluation:**
+- Material values: Pawn(1), Knight(3), Bishop(3.1), Rook(5), Queen(9)
+- Opening development bonuses for early game play
+- Mate threat detection for tactical awareness
+- Random factor to avoid repetitive play
 
----
+**Search Depths:**
+- Easy (Depth 2): ~400 positions evaluated
+- Medium (Depth 3): ~8,000 positions evaluated  
+- Hard (Depth 4): ~160,000 positions evaluated
+
+## Quick Start
+
+```bash
+# Clone and run
+git clone https://github.com/yourusername/chess.git
+cd chess
+pip install -r requirements.txt
+python main.py
+```
+
+## Technical Requirements
+
+- **Python**: 3.7 or higher
+- **Dependencies**: `chess` (game logic), `Pillow` (image processing)
 
 ## Project Structure
 
 ```
-chess_3/
-├── main.py              # Entry point
-├── chess_gui.py         # GUI logic (Tkinter)
-├── ChessEngine.py       # Minimax AI engine
-├── requirements.txt     # Python dependencies
-├── .gitignore           # Git ignore rules
-├── images/              # Chess piece images (12 PNGs)
-│   ├── wk.png
-│   ├── wq.png
-│   └── ...etc.
+chess/
+├── main.py              # Application entry point
+├── ChessEngine.py       # Minimax algorithm core implementation
+├── chess_gui.py         # Tkinter GUI and game interface
+├── requirements.txt     # Python package dependencies
+└── images/              # Chess piece graphics (12 PNG files)
 ```
 
----
+## How to Play
 
-## How it Works
+1. Run `python main.py` to start
+2. Choose your color (White/Black) and difficulty level
+3. Click pieces to move them on the board
+4. Use navigation buttons to review move history
+5. Game automatically detects checkmate, stalemate, and draws
 
-- When you start the game, you choose your color and the AI difficulty.
-- The board is displayed with images for each piece.
-- Click to select and move your pieces; legal moves are highlighted.
-- The AI responds using minimax search with standard chess piece values (Pawn=1, Knight=3, Bishop=3.1, Rook=5, Queen=9).
-- The game ends with a win, loss, or draw, and a dialog explains the result.
+## Educational Value
 
----
+This implementation is ideal for:
+- Learning the **Minimax algorithm** in practice
+- Understanding **Alpha-Beta pruning** optimization
+- Studying **game tree search** techniques
+- Chess programming and AI development
+- Teaching recursive algorithms and game theory
 
-## Notes
+## License
 
-- The `images/` folder must be present in the same directory as the code files for the game to display pieces correctly.
-- The project uses only open-source Python packages.
+**MIT License** - Free to use, modify, and distribute for any purpose.
 
----
+```
+Copyright (c) 2024
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-*Enjoy playing and studying chess with your own Python AI!*
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

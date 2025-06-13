@@ -63,14 +63,19 @@ class Engine:
         if (depth == self.maxDepth
                 or self.board.legal_moves.count() == 0):
             return self.evalFunct()
-            print(depth)
 
         else:
             # get list of legal moves of the current position
             moveListe = list(self.board.legal_moves)
 
-            # initialise newCandidate
+            # If no moves available, return evaluation
+            if not moveListe:
+                return self.evalFunct()
+
+            # initialise newCandidate and best move
             newCandidate = None
+            best_move = moveListe[0]  # Initialize with first move as fallback
+            
             # (uneven depth means engine's turn)
             if (depth % 2 != 0):
                 newCandidate = float("-inf")
@@ -91,7 +96,7 @@ class Engine:
                 if (value > newCandidate and depth % 2 != 0):
                     # need to save move played by the engine
                     if (depth == 1):
-                        move = i
+                        best_move = i
                     newCandidate = value
                 # if minimizing (human player's turn)
                 elif (value < newCandidate and depth % 2 == 0):
@@ -120,6 +125,6 @@ class Engine:
                 return newCandidate
             else:
                 # return the move (only on first move)
-                return move
+                return best_move
 
 
