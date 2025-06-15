@@ -75,8 +75,7 @@ class ChessGUI:
 
     def get_difficulty_name(self):
         """Convert depth number to difficulty name"""
-        difficulty_map = {2: "Easy", 3: "Medium", 4: "Hard"}
-        return difficulty_map.get(self.depth, "Unknown")
+        return f"Depth {self.depth}"
 
     def create_navigation_panel(self):
         """Create the modern right-side navigation panel"""
@@ -521,18 +520,21 @@ class ChessGUI:
         tk.Radiobutton(color_frame, text="Black", variable=color_var, 
                       value="black", font=("Arial", 11)).pack(anchor=tk.W, pady=3)
         
-        # Difficulty selection frame with better styling
-        difficulty_frame = tk.LabelFrame(main_frame, text="Choose Difficulty Level", 
-                                        font=("Arial", 12, "bold"), padx=15, pady=12)
-        difficulty_frame.pack(fill=tk.X, pady=(0, 20))
+        # Engine depth selection frame with better styling
+        depth_frame = tk.LabelFrame(main_frame, text="Choose Engine Depth", 
+                                   font=("Arial", 12, "bold"), padx=15, pady=12)
+        depth_frame.pack(fill=tk.X, pady=(0, 20))
         
-        depth_var = tk.StringVar(value="2")
-        tk.Radiobutton(difficulty_frame, text="Easy (Depth 2)", variable=depth_var, 
-                      value="2", font=("Arial", 11)).pack(anchor=tk.W, pady=3)
-        tk.Radiobutton(difficulty_frame, text="Medium (Depth 3)", variable=depth_var, 
-                      value="3", font=("Arial", 11)).pack(anchor=tk.W, pady=3)
-        tk.Radiobutton(difficulty_frame, text="Hard (Depth 4)", variable=depth_var, 
-                      value="4", font=("Arial", 11)).pack(anchor=tk.W, pady=3)
+        # Depth selection label and dropdown
+        depth_label = tk.Label(depth_frame, text="Engine Depth:", font=("Arial", 11))
+        depth_label.pack(anchor=tk.W, pady=(0, 5))
+        
+        depth_var = tk.StringVar(value="3")
+        depth_dropdown = ttk.Combobox(depth_frame, textvariable=depth_var, 
+                                     values=["2", "3", "4", "5", "6", "7"],
+                                     state="readonly", font=("Arial", 11), width=10)
+        depth_dropdown.pack(anchor=tk.W, pady=(0, 5))
+        depth_dropdown.set("3")  # Default to depth 3
         
         # Button frame with proper spacing to ensure visibility
         button_frame = tk.Frame(main_frame)
@@ -584,7 +586,9 @@ class ChessGUI:
                     if self.user_color == ch.WHITE:
                         file_letter = chr(ord('a') + j)
                     else:
-                        file_letter = chr(ord('a') + (7 - j))
+                        # When playing as Black, show files h-a from left to right
+                        actual_j = 7 - j  # Get the actual file index before flipping
+                        file_letter = chr(ord('h') - actual_j)
                     # Bottom-right corner of square (moved closer to corner)
                     self.canvas.create_text(x0 + 72, y0 + 75, text=file_letter, 
                                           font=("Arial", 8, "bold"), fill=text_color, tags="coordinates")
@@ -594,7 +598,9 @@ class ChessGUI:
                     if self.user_color == ch.WHITE:
                         rank_number = str(8 - i)
                     else:
-                        rank_number = str(i + 1)
+                        # When playing as Black, show ranks 8-1 from bottom to top
+                        actual_i = 7 - i  # Get the actual rank index before flipping
+                        rank_number = str(actual_i + 1)
                     # Top-left corner of square (moved closer to corner)
                     self.canvas.create_text(x0 + 8, y0 + 12, text=rank_number, 
                                           font=("Arial", 8, "bold"), fill=text_color, tags="coordinates")

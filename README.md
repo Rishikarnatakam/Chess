@@ -9,7 +9,7 @@ This project demonstrates a complete chess engine using the **Minimax algorithm*
 ## Core Features
 
 - **Minimax AI Engine**: Recursive tree search with Alpha-Beta pruning optimization
-- **Configurable Difficulty**: 3 levels (Depth 2-4) affecting search depth and playing strength  
+- **Configurable Engine Depth**: User-selectable depth (2-7) for optimal performance on any computer  
 - **Complete Chess Implementation**: All official rules including special moves and endgame conditions
 - **Interactive GUI**: Visual board with smooth animations and move history navigation
 - **Game Analysis**: Review previous positions and export games in PGN format
@@ -30,10 +30,11 @@ The AI engine (`ChessEngine.py`) uses:
 - Mate threat detection for tactical awareness
 - Random factor to avoid repetitive play
 
-**Search Depths:**
-- Easy (Depth 2): ~400 positions evaluated
-- Medium (Depth 3): ~8,000 positions evaluated  
-- Hard (Depth 4): ~160,000 positions evaluated
+**Engine Depth Performance Guide:**
+- Start with **Depth 3** for most computers
+- If moves take too long, reduce depth
+- If you want stronger play and have a powerful computer, increase depth
+- Depth 5+ may cause significant delays on older/slower computers
 
 ## Quick Start
 
@@ -64,10 +65,12 @@ chess/
 ## How to Play
 
 1. Run `python main.py` to start
-2. Choose your color (White/Black) and difficulty level
+2. Choose your color (White/Black) and engine depth (2-7)
 3. Click pieces to move them on the board
 4. Use navigation buttons to review move history
 5. Game automatically detects checkmate, stalemate, and draws
+
+**Note**: If the engine takes too long to move, restart and choose a lower depth setting.
 
 ## Educational Value
 
