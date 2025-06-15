@@ -416,14 +416,38 @@ class ChessGUI:
             )
             
             if filename:
+                # Determine game result
+                result_pgn = "*"
+                result_text = "Game in progress"
+                
+                if self.board.is_game_over():
+                    outcome = self.board.outcome()
+                    if outcome.winner is None:
+                        result_pgn = "1/2-1/2"
+                        if outcome.termination == ch.Termination.STALEMATE:
+                            result_text = "1/2-1/2 (Draw by Stalemate)"
+                        elif outcome.termination == ch.Termination.INSUFFICIENT_MATERIAL:
+                            result_text = "1/2-1/2 (Draw by Insufficient Material)"
+                        elif outcome.termination == ch.Termination.FIVEFOLD_REPETITION:
+                            result_text = "1/2-1/2 (Draw by Fivefold Repetition)"
+                        elif outcome.termination == ch.Termination.THREEFOLD_REPETITION:
+                            result_text = "1/2-1/2 (Draw by Threefold Repetition)"
+                        elif outcome.termination == ch.Termination.FIFTY_MOVES:
+                            result_text = "1/2-1/2 (Draw by Fifty Moves)"
+                        else:
+                            result_text = "1/2-1/2 (Draw)"
+                    elif outcome.winner == ch.WHITE:
+                        result_pgn = "1-0"
+                        result_text = "1-0 (White wins)"
+                    else:
+                        result_pgn = "0-1"
+                        result_text = "0-1 (Black wins)"
+                
                 with open(filename, 'w') as f:
-                    # Write PGN headers
-                    f.write('[Event "Chess Game"]\n')
-                    f.write('[Site "Local"]\n')
-                    f.write('[Date "?"]\n')
+                    # Write PGN headers (removed Event, Site, Date)
                     f.write(f'[White "{"Human" if self.user_color == ch.WHITE else "Engine"}"]\n')
                     f.write(f'[Black "{"Human" if self.user_color == ch.BLACK else "Engine"}"]\n')
-                    f.write(f'[Result "*"]\n\n')
+                    f.write(f'[Result "{result_pgn}"]\n\n')
                     
                     # Write moves
                     move_text = ""
@@ -434,9 +458,9 @@ class ChessGUI:
                         else:  # Black move
                             move_text += f"{move_data['notation']} "
                     
-                    f.write(move_text + "*\n")
+                    f.write(move_text + result_pgn + "\n")
                     
-                messagebox.showinfo("Export PGN", f"Game exported to {filename}")
+                messagebox.showinfo("Export PGN", f"Game exported to {filename}\nResult: {result_text}")
         except Exception as e:
             messagebox.showerror("Export Error", f"Failed to export: {e}")
 
@@ -462,13 +486,13 @@ class ChessGUI:
         
         # Center the dialog on screen with improved sizing
         dialog_width = 450
-        dialog_height = 480
+        dialog_height = 485
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width - dialog_width) // 2
         y = (screen_height - dialog_height) // 2
         top.geometry(f"{dialog_width}x{dialog_height}+{x}+{y}")
-        top.minsize(450, 480)  # Ensure minimum size
+        top.minsize(450, 485)  # Ensure minimum size
         
         # Make dialog modal and ensure it appears on top
         top.transient(self.root)
@@ -542,6 +566,8 @@ class ChessGUI:
 
     def draw_board(self):
         self.canvas.delete("board")  # Clear previous board to prevent overlaps
+        self.canvas.delete("coordinates")  # Clear previous coordinates
+        
         for i in range(8):
             for j in range(8):
                 color = "#FFFACD" if (i + j) % 2 == 0 else "#593E1A"
@@ -549,6 +575,29 @@ class ChessGUI:
                 x0 = (j if self.user_color == ch.WHITE else 7-j) * 80
                 y0 = (i if self.user_color == ch.WHITE else 7-i) * 80
                 self.canvas.create_rectangle(x0, y0, x0 + 80, y0 + 80, fill=color, tags="board")
+                
+                # Add coordinates
+                text_color = "#333333" if (i + j) % 2 == 0 else "#CCCCCC"
+                
+                # Add file letters (a-h) on bottom row only
+                if (self.user_color == ch.WHITE and i == 7) or (self.user_color == ch.BLACK and i == 0):
+                    if self.user_color == ch.WHITE:
+                        file_letter = chr(ord('a') + j)
+                    else:
+                        file_letter = chr(ord('a') + (7 - j))
+                    # Bottom-right corner of square (moved closer to corner)
+                    self.canvas.create_text(x0 + 72, y0 + 75, text=file_letter, 
+                                          font=("Arial", 8, "bold"), fill=text_color, tags="coordinates")
+                
+                # Add rank numbers (1-8) on leftmost column only
+                if (self.user_color == ch.WHITE and j == 0) or (self.user_color == ch.BLACK and j == 7):
+                    if self.user_color == ch.WHITE:
+                        rank_number = str(8 - i)
+                    else:
+                        rank_number = str(i + 1)
+                    # Top-left corner of square (moved closer to corner)
+                    self.canvas.create_text(x0 + 8, y0 + 12, text=rank_number, 
+                                          font=("Arial", 8, "bold"), fill=text_color, tags="coordinates")
         
         self.draw_pieces()
 
